@@ -1,6 +1,7 @@
 import * as z from 'zod';
 
 const categories = [
+  'appliances',
   'candomble',
   'car',
   'credit-allowance',
@@ -12,6 +13,7 @@ const categories = [
   'pets',
   'subscriptions',
   'taxes',
+  'transport',
   'unrecognized',
 ] as const;
 

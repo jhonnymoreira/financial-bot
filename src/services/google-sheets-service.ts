@@ -20,7 +20,7 @@ export class GoogleSheetsService {
   }
 
   async appendExpense(expense: Expense): Promise<boolean> {
-    const sheetsClient = await this.#getSheetsClient();
+    const sheetsClient = this.#getSheetsClient();
 
     const row = [
       expense.messageId,

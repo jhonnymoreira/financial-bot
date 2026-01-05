@@ -72,7 +72,7 @@ export class GeminiService {
 - paymentType: débito→debit, crédito→credit, pix→pix, boleto→boleto
 - paymentIdentifier: capitalize provider
 - message: title case
-- category: if category isn't present, analyze description context, choose one or more, separated by comma: monthly-expenses|credit-allowance|appliances|transport|food|market|candomble|subscriptions|car|health|entertainment|taxes|unrecognized
+- category: if category isn't present, analyze description context, choose one or more, separated by comma: monthly-expenses|gifts|self-care|credit-allowance|appliances|transport|food|market|candomble|subscriptions|car|health|entertainment|taxes|unrecognized
   Understand intent: cigarro→addiction, mercado/supermercado/compras→market, restaurante/lanchonete/bar/ifood→food, gasolina/posto/combustível/mecânico→car, farmácia/remédio/consulta→health, netflix/spotify/claude/cursor/amazon prime/assinatura→subscriptions, aluguel/conta/luz/água/internet→monthly-expenses, candomblé/axé/orixá/ebó→candomble, steam/jogo/ea/game→entertainment, iof→taxes, ipva→taxes,car, licensiamento do carro→taxes,car, felina/felinas/petz→pets, liberação de crédito→credit-allowance, uber→transport
   Use semantic understanding, not just keywords
   If category is present, standardize it

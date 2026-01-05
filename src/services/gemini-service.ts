@@ -69,11 +69,11 @@ export class GeminiService {
 - currency: "BRL"
 - registeredAt: ISO Timestamp
 - occurredAt: ISO Date (hoje/ontem/"X dias atrás"→calculate the operation between the currentDate and the date)
-- paymentType: débito→debit, crédito→credit, pix→pix
+- paymentType: débito→debit, crédito→credit, pix→pix, boleto→boleto
 - paymentIdentifier: capitalize provider
 - message: title case
-- category: if category isn't present, analyze description context, choose one or more, separated by comma: monthly expenses|food|market|candomble|subscriptions|car|health|entertainment|taxes|unrecognized
-  Understand intent: mercado/supermercado/compras→market, restaurante/lanchonete/bar/ifood→food, gasolina/posto/combustível/mecânico→car, farmácia/remédio/consulta→health, netflix/spotify/claude/cursor/amazon prime/assinatura→subscriptions, aluguel/conta/luz/água/internet→monthly expenses, candomblé/axé/orixá/ebó→candomble, steam/jogo/ea/game→entertainment, iof→taxes, ipva→taxes,car, licensiamento do carro→taxes,car
+- category: if category isn't present, analyze description context, choose one or more, separated by comma: monthly-expenses|food|market|candomble|subscriptions|car|health|entertainment|taxes|unrecognized
+  Understand intent: cigarro→addiction, mercado/supermercado/compras→market, restaurante/lanchonete/bar/ifood→food, gasolina/posto/combustível/mecânico→car, farmácia/remédio/consulta→health, netflix/spotify/claude/cursor/amazon prime/assinatura→subscriptions, aluguel/conta/luz/água/internet→monthly-expenses, candomblé/axé/orixá/ebó→candomble, steam/jogo/ea/game→entertainment, iof→taxes, ipva→taxes,car, licensiamento do carro→taxes,car, felina/felinas/petz→pets, liberação de crédito→credit-allowance
   Use semantic understanding, not just keywords
   If category is present, standardize it
 

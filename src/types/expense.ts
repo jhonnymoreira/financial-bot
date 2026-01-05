@@ -3,11 +3,13 @@ import * as z from 'zod';
 const categories = [
   'candomble',
   'car',
+  'credit-allowance',
   'entertainment',
   'food',
   'health',
   'market',
-  'monthly expenses',
+  'monthly-expenses',
+  'pets',
   'subscriptions',
   'taxes',
   'unrecognized',
@@ -21,7 +23,7 @@ export const expenseSchema = z.object({
   currency: z.enum(['BRL']),
   registeredAt: z.iso.datetime(),
   occurredAt: z.iso.date(),
-  paymentType: z.enum(['pix', 'debit', 'credit']),
+  paymentType: z.enum(['pix', 'debit', 'credit', 'boleto']),
   paymentIdentifier: z.string().min(1),
   message: z.string().min(1),
   category: z.string().refine(

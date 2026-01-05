@@ -23,15 +23,15 @@ export class GoogleSheetsService {
     const sheetsClient = this.#getSheetsClient();
 
     const row = [
-      expense.messageId,
-      expense.registeredAt,
       expense.occurredAt,
-      expense.currency,
       expense.amount,
       expense.message,
       expense.category,
       expense.paymentType,
       expense.paymentIdentifier,
+      expense.currency,
+      expense.messageId,
+      expense.registeredAt,
     ];
 
     try {

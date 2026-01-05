@@ -1,5 +1,5 @@
+import { Bot } from 'gramio';
 import { z } from 'zod';
-import { Bot, pre } from 'gramio';
 import type { DependencyInjection } from '@/types/dependency-injection.js';
 import { expenseSchema } from '@/types/expense.js';
 

@@ -24,14 +24,14 @@ export class GoogleSheetsService {
 
     const row = [
       expense.messageId,
-      expense.amount,
-      expense.currency,
       expense.registeredAt,
       expense.occurredAt,
-      expense.paymentType,
-      expense.paymentIdentifier,
+      expense.currency,
+      expense.amount,
       expense.message,
       expense.category,
+      expense.paymentType,
+      expense.paymentIdentifier,
     ];
 
     try {

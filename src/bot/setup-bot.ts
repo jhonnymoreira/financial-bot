@@ -38,43 +38,50 @@ export async function setupBot({ services }: DependencyInjection) {
 
     const statusMessage = await context.reply('Processando...');
 
-    const registeredAt = new Date(context.createdAt * 1000).toISOString();
-    const id = message?.message_id;
-    const registeredExpense = message?.text;
-    if (!id || !registeredExpense) {
-      return;
-    }
+    try {
+      const registeredAt = new Date(context.createdAt * 1000).toISOString();
+      const id = message?.message_id;
+      const registeredExpense = message?.text;
+      if (!id || !registeredExpense) {
+        return;
+      }
 
-    await statusMessage.editText('Processando via Gemini...');
-    const parsedExpense = await geminiService.parseRegisterExpense({
-      expense: registeredExpense,
-      id,
-      registeredAt,
-    });
+      await statusMessage.editText('Processando via Gemini...');
+      const parsedExpense = await geminiService.parseRegisterExpense({
+        expense: registeredExpense,
+        id,
+        registeredAt,
+      });
 
-    const expense = expenseSchema.safeParse(parsedExpense);
-    if (!expense.success) {
-      console.log(JSON.stringify(z.treeifyError(expense.error), null, 2));
-      return await statusMessage.editText(
-        'O Gemini não conseguiu processar a mensagem corretamente.',
+      const expense = expenseSchema.safeParse(parsedExpense);
+      if (!expense.success) {
+        console.log(JSON.stringify(z.treeifyError(expense.error), null, 2));
+        return await statusMessage.editText(
+          'O Gemini não conseguiu processar a mensagem corretamente.',
+        );
+      }
+
+      await statusMessage.editText('Salvando na planilha...');
+      const saved = await googleSheetsService.appendExpense(expense.data);
+
+      if (!saved) {
+        return await statusMessage.editText(
+          'Erro ao salvar na planilha. Por favor, tente novamente.',
+        );
+      }
+
+      const timeEnd = Date.now();
+
+      const timeTotal = ((timeEnd - timeStart) / 1000).toPrecision(2);
+      await statusMessage.editText(
+        `✅ Despesa registrada com sucesso em ${timeTotal}s`,
+      );
+    } catch (error) {
+      console.log('[MESSAGE PROCESSING ERROR] ', error);
+      await statusMessage.editText(
+        '🔴 Algo inesperado aconteceu. Verifique os logs e tente novamente mais tarde.',
       );
     }
-
-    await statusMessage.editText('Salvando na planilha...');
-    const saved = await googleSheetsService.appendExpense(expense.data);
-
-    if (!saved) {
-      return await statusMessage.editText(
-        'Erro ao salvar na planilha. Por favor, tente novamente.',
-      );
-    }
-
-    const timeEnd = Date.now();
-
-    const timeTotal = ((timeEnd - timeStart) / 1000).toPrecision(2);
-    await statusMessage.editText(
-      `✅ Despesa registrada com sucesso em ${timeTotal}s`,
-    );
   });
 
   return bot;

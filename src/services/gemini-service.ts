@@ -72,8 +72,8 @@ export class GeminiService {
 - paymentType: débito→debit, crédito→credit, pix→pix, boleto→boleto
 - paymentIdentifier: capitalize provider
 - message: title case
-- category: if category isn't present, analyze description context, choose one or more, separated by comma: monthly-expenses|gifts|self-care|education|credit-allowance|appliances|transport|food|market|candomble|subscriptions|car|health|entertainment|taxes|unrecognized
-  Understand intent: cigarro→addiction, mercado/supermercado/compras→market, restaurante/lanchonete/bar/ifood→food, gasolina/posto/combustível/mecânico→car, farmácia/remédio/consulta→health, netflix/spotify/claude/cursor/amazon prime/assinatura→subscriptions, aluguel/conta/luz/água/internet→monthly-expenses, candomblé/axé/orixá/ebó→candomble, steam/jogo/ea/game→entertainment, iof→taxes, ipva→taxes,car, licensiamento do carro→taxes,car, felina/felinas/petz→pets, liberação de crédito→credit-allowance, uber→transport
+- category: if category isn't present, analyze description context, choose one or more, separated by comma: appliances|candomble|car|credit-allowance|education|entertainment|food|gifts|health|market|monthly-expenses|pets|self-care|subscriptions|subscriptions-1-month|subscriptions-3-months|subscriptions-6-months|subscriptions-1-year|taxes|transport|unrecognized
+  Understand intent: mercado/supermercado/compras→market, restaurante/lanchonete/bar/ifood→food, gasolina/posto/combustível/mecânico→car, farmácia/remédio/consulta→health, netflix/spotify/claude/cursor/amazon prime/assinatura→subscriptions, aluguel/conta/luz/água/internet→monthly-expenses, candomblé/axé/orixá/ebó→candomble, steam/jogo/ea/game→entertainment, iof→taxes, ipva→taxes,car, licensiamento do carro→taxes,car, felina/felinas/petz→pets, liberação de crédito→credit-allowance, uber→transport
   Use semantic understanding, not just keywords
   If category is present, standardize it
 

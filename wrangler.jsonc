@@ -1,0 +1,36 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "aa2djxzx4t",
+  "main": "src/index.ts",
+  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_date": "2025-12-17",
+  "upload_source_maps": true,
+  "placement": {
+    "mode": "smart"
+  },
+  "observability": {
+    "traces": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "persist": true
+    },
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": true,
+      "persist": true
+    }
+  },
+  "secrets_store_secrets": [
+    {
+      "binding": "TELEGRAM_WEBHOOK_SECRET_TOKEN",
+      "store_id": "d65937ab096048d08ff5a7b343b753ba",
+      "secret_name": "aa2djxzx4t_secret_token"
+    },
+    {
+      "binding": "TELEGRAM_BOT_TOKEN",
+      "store_id": "d65937ab096048d08ff5a7b343b753ba",
+      "secret_name": "aa2djxzx4t_telegram_bot_token"
+    }
+  ]
+}

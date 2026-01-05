@@ -5,6 +5,7 @@ const categories = [
   'candomble',
   'car',
   'credit-allowance',
+  'education',
   'entertainment',
   'food',
   'gifts',

@@ -62,7 +62,7 @@ export class GeminiService {
     expense,
     registeredAt,
   }: RegisterExpenseParams) {
-    return `Parse to JSON: {id} {registeredAt} {currentDate} {amount} {date} {description} {type} {provider}
+    return `Parse to JSON: {id} {registeredAt} {currentDate} {amount} {date} {description} {type} {provider} {category}
 
 - messageId: id (as number)
 - amount: number
@@ -72,9 +72,10 @@ export class GeminiService {
 - paymentType: débito→debit, crédito→credit, pix→pix
 - paymentIdentifier: capitalize provider
 - message: title case
-- category: analyze description context, choose one or more, separated by comma: monthly expenses|food|market|candomble|subscriptions|car|health|entertainment|taxes|unrecognized
+- category: if category isn't present, analyze description context, choose one or more, separated by comma: monthly expenses|food|market|candomble|subscriptions|car|health|entertainment|taxes|unrecognized
   Understand intent: mercado/supermercado/compras→market, restaurante/lanchonete/bar/ifood→food, gasolina/posto/combustível/mecânico→car, farmácia/remédio/consulta→health, netflix/spotify/claude/cursor/amazon prime/assinatura→subscriptions, aluguel/conta/luz/água/internet→monthly expenses, candomblé/axé/orixá/ebó→candomble, steam/jogo/ea/game→entertainment, iof→taxes, ipva→taxes,car, licensiamento do carro→taxes,car
   Use semantic understanding, not just keywords
+  If category is present, standardize it
 
 Example:
 47 2026-01-05T01:47:39.943Z 2026-01-05T01:47:39.943Z 22.35 ontem compras no mercado débito Nubank

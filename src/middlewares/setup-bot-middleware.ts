@@ -6,7 +6,7 @@ export const setupBotMiddleware = factory.createMiddleware(
     const services = context.get('services');
     const bot = await setupBot({ services });
     if (!bot) {
-      return new Response(null, { status: 204 });
+      return new Response(null, { status: 500 });
     }
 
     context.set('bot', bot);

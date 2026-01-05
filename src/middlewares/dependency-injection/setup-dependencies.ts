@@ -9,13 +9,17 @@ export function setupDependencies(
   env: AppEnv['Bindings'],
   { constants }: { constants: Constants },
 ): DependencyInjection {
+  const secretsStoreService = new services.SecretsStoreService(env);
+  const geminiService = new services.GeminiService(secretsStoreService);
+
   return {
     services: {
       botManagerService: new services.BotManagerService({
         chatsIds: constants.ALLOWED_CHATS_IDS,
         usersIds: constants.ALLOWED_USERS_IDS,
       }),
-      secretsStoreService: new services.SecretsStoreService(env),
+      geminiService,
+      secretsStoreService,
     },
   };
 }

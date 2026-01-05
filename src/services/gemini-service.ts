@@ -30,7 +30,12 @@ export class GeminiService {
       throw new Error('Unable to parse expense');
     }
 
-    return JSON.parse(response.text);
+    try {
+      return JSON.parse(response.text);
+    } catch {
+      console.log({ response: response.text });
+      throw new Error('Unable to parse expense');
+    }
   }
 
   private async getAiClient() {
@@ -59,7 +64,7 @@ export class GeminiService {
   }: RegisterExpenseParams) {
     return `Parse to JSON: {id} {registeredAt} {currentDate} {amount} {date} {description} {type} {provider}
 
-- messageId: id
+- messageId: id (as number)
 - amount: number
 - currency: "BRL"
 - registeredAt: ISO Timestamp
@@ -72,10 +77,10 @@ export class GeminiService {
   Use semantic understanding, not just keywords
 
 Example:
-dac12ade-0912-4056-ad2d-a029bc08ca78 2026-01-05T01:47:39.943Z 2026-01-05T01:47:39.943Z 22.35 ontem compras no mercado débito Nubank
-→{"messageId":"dac12ade-0912-4056-ad2d-a029bc08ca78","amount":22.35,"currency":"BRL","registeredAt":"2026-01-05T01:47:39.943Z","ocurredAt":"2026-01-04","paymentType":"debit","paymentIdentifier":"Nubank","message":"Compras no Mercado","category":"market"}
+47 2026-01-05T01:47:39.943Z 2026-01-05T01:47:39.943Z 22.35 ontem compras no mercado débito Nubank
+→{"messageId":47,"amount":22.35,"currency":"BRL","registeredAt":"2026-01-05T01:47:39.943Z","occurredAt":"2026-01-04","paymentType":"debit","paymentIdentifier":"Nubank","message":"Compras no Mercado","category":"market"}
 
-Parse (raw JSON only, no markdown, no code blocks):
+Parse (raw JSON only, no markdown, no code blocks, just text):
 ${id} ${registeredAt} ${new Date().toISOString()} ${expense}`.trim();
   }
 }

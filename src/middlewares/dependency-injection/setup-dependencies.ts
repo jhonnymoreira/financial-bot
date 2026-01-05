@@ -11,6 +11,11 @@ export function setupDependencies(
 ): DependencyInjection {
   const secretsStoreService = new services.SecretsStoreService(env);
   const geminiService = new services.GeminiService(secretsStoreService);
+  const googleSheetsService = new services.GoogleSheetsService({
+    spreadsheetId: '1I957S-QuQwPCfejKT-_utbThES5MwXrE3GJNV4cD2Qo',
+    sheetName: 'Backlog',
+    serviceAccountCredentials: env.GOOGLE_SERVICE_ACCOUNT,
+  });
 
   return {
     services: {
@@ -19,6 +24,7 @@ export function setupDependencies(
         usersIds: constants.ALLOWED_USERS_IDS,
       }),
       geminiService,
+      googleSheetsService,
       secretsStoreService,
     },
   };

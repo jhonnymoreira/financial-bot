@@ -4,7 +4,12 @@ import type { DependencyInjection } from '@/types/dependency-injection.js';
 import { expenseSchema } from '@/types/expense.js';
 
 export async function setupBot({ services }: DependencyInjection) {
-  const { botManagerService, geminiService, secretsStoreService } = services;
+  const {
+    botManagerService,
+    geminiService,
+    googleSheetsService,
+    secretsStoreService,
+  } = services;
 
   const botToken = await secretsStoreService.getSecret('TELEGRAM_BOT_TOKEN');
   if (!botToken) {
@@ -54,9 +59,16 @@ export async function setupBot({ services }: DependencyInjection) {
       );
     }
 
-    await statusMessage.editText(
-      pre(JSON.stringify(expense.data, null, 2), 'json'),
-    );
+    await statusMessage.editText('Salvando na planilha...');
+    const saved = await googleSheetsService.appendExpense(expense.data);
+
+    if (!saved) {
+      return await statusMessage.editText(
+        'Erro ao salvar na planilha. Por favor, tente novamente.',
+      );
+    }
+
+    await statusMessage.editText('✅ Despesa registrada com sucesso.');
   });
 
   return bot;

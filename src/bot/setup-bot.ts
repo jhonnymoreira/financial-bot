@@ -17,6 +17,7 @@ export async function setupBot({ services }: DependencyInjection) {
   }
 
   const bot = new Bot(botToken).on('message', async (context) => {
+    const timeStart = Date.now();
     const message = context.update?.message;
 
     const chatId = context.chatId;
@@ -68,7 +69,12 @@ export async function setupBot({ services }: DependencyInjection) {
       );
     }
 
-    await statusMessage.editText('✅ Despesa registrada com sucesso.');
+    const timeEnd = Date.now();
+
+    const timeTotal = ((timeEnd - timeStart) / 1000).toPrecision(2);
+    await statusMessage.editText(
+      `✅ Despesa registrada com sucesso em ${timeTotal}s`,
+    );
   });
 
   return bot;

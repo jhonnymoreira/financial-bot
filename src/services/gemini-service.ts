@@ -21,10 +21,11 @@ export class GeminiService {
   async parseRegisterExpense(params: RegisterExpenseParams): Promise<Expense> {
     const ai = await this.getAiClient();
     const contents = this.generateRegisterExpenseContext(params);
+
     const response = await ai.models.generateContent({
       model: this.#model,
       contents,
-      generationConfig: {
+      config: {
         responseMimeType: 'application/json',
         responseSchema: {
           type: 'object',

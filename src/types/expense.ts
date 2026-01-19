@@ -21,6 +21,7 @@ const categories = [
   'subscriptions-1-year',
   'taxes',
   'transport',
+  'work',
   'unrecognized',
 ] as const;
 

@@ -1,12 +1,10 @@
 import { Bot } from 'gramio';
-import { z } from 'zod';
 import type { DependencyInjection } from '@/types/dependency-injection.js';
-import { expenseSchema } from '@/types/expense.js';
 
 export async function setupBot({ services }: DependencyInjection) {
   const {
+    anthropicService,
     botManagerService,
-    geminiService,
     googleSheetsService,
     secretsStoreService,
   } = services;
@@ -46,23 +44,15 @@ export async function setupBot({ services }: DependencyInjection) {
         return;
       }
 
-      await statusMessage.editText('Processando via Gemini...');
-      const parsedExpense = await geminiService.parseRegisterExpense({
+      await statusMessage.editText('Processando via Anthropic...');
+      const expense = await anthropicService.parseExpense({
         expense: registeredExpense,
         id,
         registeredAt,
       });
 
-      const expense = expenseSchema.safeParse(parsedExpense);
-      if (!expense.success) {
-        console.log(JSON.stringify(z.treeifyError(expense.error), null, 2));
-        return await statusMessage.editText(
-          'O Gemini não conseguiu processar a mensagem corretamente.',
-        );
-      }
-
       await statusMessage.editText('Salvando na planilha...');
-      const saved = await googleSheetsService.appendExpense(expense.data);
+      const saved = await googleSheetsService.appendExpense(expense);
 
       if (!saved) {
         return await statusMessage.editText(
@@ -77,7 +67,7 @@ export async function setupBot({ services }: DependencyInjection) {
         `✅ Despesa registrada com sucesso em ${timeTotal}s`,
       );
     } catch (error) {
-      console.log('[MESSAGE PROCESSING ERROR] ', error);
+      console.error('[MESSAGE PROCESSING ERROR] ', error);
       await statusMessage.editText(
         '🔴 Algo inesperado aconteceu. Verifique os logs e tente novamente mais tarde.',
       );

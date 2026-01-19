@@ -2,6 +2,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import * as z from 'zod';
 import { type Expense, expenseSchema } from '@/types/expense.js';
 import type { SecretsStoreService } from './secrets-store-service.js';
+import { getISODate } from '@/utils/index.js';
 
 type RegisterExpenseParams = {
   id: number;
@@ -77,22 +78,22 @@ export class AnthropicService {
     expense,
     registeredAt,
   }: RegisterExpenseParams) {
-    const currentDate = new Date().toISOString();
+    const currentDate = getISODate(new Date());
 
     return `Extract expense data from: "${id} ${registeredAt} ${currentDate} ${expense}"
     
     INPUT FORMAT:
-    {amount} {description} {date_reference} {payment_type} {provider} {category}
+    {amount} {description} {current_date} {payment_type} {provider} {category}
     
     FIELD EXTRACTION RULES:
     - messageId: use id as number
     - amount: extract numeric value only
     - currency: always "BRL"
     - registeredAt: use provided timestamp as-is
-    - occurredAt: calculate ISO date from date_reference
+    - occurredAt: calculate ISO date from current_date
       * hoje → today's date
       * ontem → yesterday's date
-      * "X dias atrás" → subtract X days from currentDate
+      * "X dias atrás" → subtract X days from current_date
     - paymentType: exact mapping required
       * débito → debit
       * crédito → credit
@@ -173,31 +174,31 @@ export class AnthropicService {
     RESPONSE EXAMPLES:
     
     Example 1 - Basic expense (inferred category):
-    Input: 47 2026-01-05T01:47:39.943Z 2026-01-05T01:47:39.943Z 22.35 compras no mercado ontem débito nubank
+    Input: 47 2026-01-05T01:47:39.943Z 2026-01-05 22.35 compras no mercado ontem débito nubank
     Output: {"messageId":47,"amount":22.35,"currency":"BRL","registeredAt":"2026-01-05T01:47:39.943Z","occurredAt":"2026-01-04","paymentType":"debit","paymentIdentifier":"Nubank","message":"Compras No Mercado","category":"market"}
     
     Example 2 - Explicit category provided:
-    Input: 48 2026-01-05T01:47:39.943Z 2026-01-05T01:47:39.943Z 50.00 compras hoje débito Nubank entertainment
+    Input: 48 2026-01-05T01:47:39.943Z 2026-01-05 50.00 compras hoje débito Nubank entertainment
     Output: {"messageId":48,"amount":50.00,"currency":"BRL","registeredAt":"2026-01-05T01:47:39.943Z","occurredAt":"2026-01-05","paymentType":"debit","paymentIdentifier":"Nubank","message":"Compras","category":"entertainment"}
     
     Example 3 - Subscription WITH frequency:
-    Input: 49 2026-01-05T01:47:39.943Z 2026-01-05T01:47:39.943Z 31.90 spotify mensal hoje débito nubank
+    Input: 49 2026-01-05T01:47:39.943Z 2026-01-05 31.90 spotify mensal hoje débito nubank
     Output: {"messageId":49,"amount":31.90,"currency":"BRL","registeredAt":"2026-01-05T01:47:39.943Z","occurredAt":"2026-01-05","paymentType":"debit","paymentIdentifier":"Nubank","message":"Spotify (Mensal)","category":"subscriptions,subscriptions-1-month,entertainment"}
     
     Example 4 - Subscription WITHOUT frequency:
-    Input: 50 2026-01-05T01:47:39.943Z 2026-01-05T01:47:39.943Z 31.90 spotify hoje débito nubank
+    Input: 50 2026-01-05T01:47:39.943Z 2026-01-05 31.90 spotify hoje débito nubank
     Output: {"messageId":50,"amount":31.90,"currency":"BRL","registeredAt":"2026-01-05T01:47:39.943Z","occurredAt":"2026-01-05","paymentType":"debit","paymentIdentifier":"Nubank","message":"Spotify","category":"subscriptions,entertainment"}
     
     Example 5 - Usage-based service (NOT subscription):
-    Input: 51 2026-01-05T01:47:39.943Z 2026-01-05T01:47:39.943Z 3.13 aws hoje crédito neon
+    Input: 51 2026-01-05T01:47:39.943Z 2026-01-05 3.13 aws hoje crédito neon
     Output: {"messageId":51,"amount":3.13,"currency":"BRL","registeredAt":"2026-01-05T01:47:39.943Z","occurredAt":"2026-01-05","paymentType":"credit","paymentIdentifier":"Neon","message":"AWS","category":"work"}
     
     Example 6 - Multi-category (inferred):
-    Input: 52 2026-01-05T01:47:39.943Z 2026-01-05T01:47:39.943Z 1990.00 plano de saúde hoje pix nubank
+    Input: 52 2026-01-05T01:47:39.943Z 2026-01-05 1990.00 plano de saúde hoje pix nubank
     Output: {"messageId":52,"amount":1990.00,"currency":"BRL","registeredAt":"2026-01-05T01:47:39.943Z","occurredAt":"2026-01-05","paymentType":"pix","paymentIdentifier":"Nubank","message":"Plano De Saúde","category":"monthly-expenses,health"}
     
     Example 7 - IOF on subscription:
-    Input: 53 2026-01-05T01:47:39.943Z 2026-01-05T01:47:39.943Z 4.03 iof - cursor hoje crédito neon
+    Input: 53 2026-01-05T01:47:39.943Z 2026-01-05 4.03 iof - cursor hoje crédito neon
     Output: {"messageId":53,"amount":4.03,"currency":"BRL","registeredAt":"2026-01-05T01:47:39.943Z","occurredAt":"2026-01-05","paymentType":"credit","paymentIdentifier":"Neon","message":"IOF - Cursor","category":"taxes,subscriptions,work"}`.trim();
   }
 }

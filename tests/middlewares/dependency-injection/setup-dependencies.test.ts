@@ -9,6 +9,11 @@ function uncaptalize<T extends string>(str: T): Uncapitalize<T> {
 
 const dependencies = setupDependencies(
   {
+    ANTHROPIC_API_KEY: {
+      async get() {
+        return 'value';
+      },
+    },
     TELEGRAM_BOT_TOKEN: {
       async get() {
         return 'value';
@@ -19,6 +24,7 @@ const dependencies = setupDependencies(
         return 'value';
       },
     },
+    GOOGLE_SERVICE_ACCOUNT: 'value',
   },
   { constants },
 );

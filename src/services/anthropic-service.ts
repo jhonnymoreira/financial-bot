@@ -89,11 +89,22 @@ export class AnthropicService {
   - amount: numeric value only
   - currency: "BRL"
   - registeredAt: use as-is
-  - occurredAt: calculate YYYY-MM-DD from currentDate + temporal_ref (hoje=today, ontem=yesterday, X dias atrás=X days ago, semana passada=7 days ago)
+  - occurredAt: calculate YYYY-MM-DD from currentDate + temporal_ref
   - paymentType: débito→debit, crédito→credit, pix→pix, boleto→boleto
   - paymentIdentifier: capitalize provider
-  - message: title case, WHAT was purchased (exclude temporal words), include frequency if present (mensal/anual)
+  - message: title case description with ALL temporal references stripped (see TEMPORAL below)
   - category: use explicit if provided, else infer (comma-separated)
+
+  TEMPORAL (use for occurredAt calculation, then REMOVE from message):
+  hoje, ontem, anteontem, X dias atrás, X dia atrás, semana passada, mês passado, ano passado, segunda, terça, quarta, quinta, sexta, sábado, domingo
+
+  Examples of temporal stripping:
+  - "mercado hoje" → message: "Mercado"
+  - "oxxo 3 dias atrás" → message: "Oxxo"
+  - "spotify semana passada" → message: "Spotify"
+  - "oxxo (verduras + legumes) ontem" → message: "Oxxo (Verduras + Legumes)"
+
+  KEEP in message: frequency markers (mensal, anual, trimestral) and descriptive content in parentheses.
 
   CATEGORIES:
   market: mercado,supermercado,oxxo,extra,carrefour,assai,coop,sacolão
@@ -125,13 +136,13 @@ export class AnthropicService {
   MULTI-CATEGORY: plano de saúde→monthly-expenses,health | juros unifor→taxes,education | iof cursor→taxes,subscriptions,work
 
   EXAMPLES:
-  Input: 47 2026-01-05T01:47:39.943Z 2026-01-05 22.35 compras no mercado ontem débito nubank
-  Output: {"messageId":47,"amount":22.35,"currency":"BRL","registeredAt":"2026-01-05T01:47:39.943Z","occurredAt":"2026-01-04","paymentType":"debit","paymentIdentifier":"Nubank","message":"Compras No Mercado","category":"market"}
+  Input: 47 2026-01-05T01:47:39.943Z 2026-01-05 22.35 mercado hoje débito nubank
+  Output: {"messageId":47,"amount":22.35,"currency":"BRL","registeredAt":"2026-01-05T01:47:39.943Z","occurredAt":"2026-01-05","paymentType":"debit","paymentIdentifier":"Nubank","message":"Mercado","category":"market"}
 
-  Input: 50 2026-01-05T01:47:39.943Z 2026-01-05 31.90 spotify mensal hoje débito nubank
-  Output: {"messageId":50,"amount":31.90,"currency":"BRL","registeredAt":"2026-01-05T01:47:39.943Z","occurredAt":"2026-01-05","paymentType":"debit","paymentIdentifier":"Nubank","message":"Spotify (Mensal)","category":"subscriptions,subscriptions-1-month,entertainment"}
+  Input: 48 2026-01-05T01:47:39.943Z 2026-01-05 45.00 oxxo (verduras + legumes) 3 dias atrás débito nubank
+  Output: {"messageId":48,"amount":45.00,"currency":"BRL","registeredAt":"2026-01-05T01:47:39.943Z","occurredAt":"2026-01-02","paymentType":"debit","paymentIdentifier":"Nubank","message":"Oxxo (Verduras + Legumes)","category":"market"}
 
-  Input: 55 2026-01-05T01:47:39.943Z 2026-01-05 45.00 oxxo 3 dias atrás débito nubank
-  Output: {"messageId":55,"amount":45.00,"currency":"BRL","registeredAt":"2026-01-05T01:47:39.943Z","occurredAt":"2026-01-02","paymentType":"debit","paymentIdentifier":"Nubank","message":"Oxxo","category":"market"}`;
+  Input: 49 2026-01-05T01:47:39.943Z 2026-01-05 31.90 spotify mensal hoje débito nubank
+  Output: {"messageId":49,"amount":31.90,"currency":"BRL","registeredAt":"2026-01-05T01:47:39.943Z","occurredAt":"2026-01-05","paymentType":"debit","paymentIdentifier":"Nubank","message":"Spotify (Mensal)","category":"subscriptions,subscriptions-1-month,entertainment"}`;
   }
 }

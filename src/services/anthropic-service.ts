@@ -1,5 +1,4 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { betaZodOutputFormat as jsonSchema } from '@anthropic-ai/sdk/helpers/beta/zod';
 import * as z from 'zod';
 import { type Expense, expenseSchema } from '@/types/expense.js';
 import type { SecretsStoreService } from './secrets-store-service.js';
@@ -35,12 +34,11 @@ export class AnthropicService {
           content,
         },
       ],
-      output_format: jsonSchema(expenseSchema),
+      output_format: {
+        type: 'json_schema',
+        schema: expenseSchema.toJSONSchema(),
+      },
     });
-
-    if (!response.parsed_output) {
-      throw new Error('No parsed output');
-    }
 
     try {
       return expenseSchema.parse(response.parsed_output);

@@ -10,7 +10,7 @@ export function setupDependencies(
   { constants }: { constants: Constants },
 ): DependencyInjection {
   const secretsStoreService = new services.SecretsStoreService(env);
-  const geminiService = new services.GeminiService(secretsStoreService);
+  const anthropicService = new services.AnthropicService(secretsStoreService);
   const googleSheetsService = new services.GoogleSheetsService({
     spreadsheetId: '1I957S-QuQwPCfejKT-_utbThES5MwXrE3GJNV4cD2Qo',
     sheetName: 'Backlog',
@@ -19,11 +19,11 @@ export function setupDependencies(
 
   return {
     services: {
+      anthropicService,
       botManagerService: new services.BotManagerService({
         chatsIds: constants.ALLOWED_CHATS_IDS,
         usersIds: constants.ALLOWED_USERS_IDS,
       }),
-      geminiService,
       googleSheetsService,
       secretsStoreService,
     },

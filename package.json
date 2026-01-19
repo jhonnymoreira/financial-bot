@@ -14,7 +14,7 @@
     "test:watch": "vitest --watch"
   },
   "dependencies": {
-    "@google/genai": "^1.37.0",
+    "@anthropic-ai/sdk": "^0.71.2",
     "@googleapis/sheets": "^13.0.1",
     "gramio": "^0.4.11",
     "hono": "^4.11.4",

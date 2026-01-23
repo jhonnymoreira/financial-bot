@@ -1,23 +1,17 @@
 import type { Bot, Context } from 'gramio';
-import type * as constants from '@/constants/index.js';
+import type { AllowList } from '@/types/index.js';
 
 export class BotManagerService {
-  readonly #chatIds: typeof constants.ALLOWED_CHATS_IDS;
-  readonly #usersIds: typeof constants.ALLOWED_USERS_IDS;
+  readonly #allowList: AllowList;
 
-  constructor({
-    chatsIds,
-    usersIds,
-  }: {
-    chatsIds: typeof constants.ALLOWED_CHATS_IDS;
-    usersIds: typeof constants.ALLOWED_USERS_IDS;
-  }) {
-    this.#chatIds = chatsIds;
-    this.#usersIds = usersIds;
+  constructor({ allowList }: { allowList: AllowList }) {
+    this.#allowList = allowList;
   }
 
   canInteract({ chatId, userId }: { chatId: number; userId: number }) {
-    return this.#chatIds.includes(chatId) && this.#usersIds.includes(userId);
+    const allowList = this.#allowList;
+
+    return allowList.chats.includes(chatId) && allowList.users.includes(userId);
   }
 
   async leaveGroup({

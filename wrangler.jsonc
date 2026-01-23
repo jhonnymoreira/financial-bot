@@ -4,6 +4,7 @@
   "main": "src/index.ts",
   "compatibility_flags": ["nodejs_compat"],
   "compatibility_date": "2025-12-17",
+  "send_metrics": false,
   "upload_source_maps": true,
   "placement": {
     "mode": "smart"
@@ -23,9 +24,9 @@
   },
   "secrets_store_secrets": [
     {
-      "binding": "TELEGRAM_WEBHOOK_SECRET_TOKEN",
+      "binding": "ANTHROPIC_API_KEY",
       "store_id": "d65937ab096048d08ff5a7b343b753ba",
-      "secret_name": "aa2djxzx4t_secret_token"
+      "secret_name": "aa2djxzx4t_anthropic_api_key"
     },
     {
       "binding": "TELEGRAM_BOT_TOKEN",
@@ -33,9 +34,9 @@
       "secret_name": "aa2djxzx4t_telegram_bot_token"
     },
     {
-      "binding": "ANTHROPIC_API_KEY",
+      "binding": "TELEGRAM_WEBHOOK_SECRET_TOKEN",
       "store_id": "d65937ab096048d08ff5a7b343b753ba",
-      "secret_name": "aa2djxzx4t_anthropic_api_key"
+      "secret_name": "aa2djxzx4t_secret_token"
     }
   ]
 }

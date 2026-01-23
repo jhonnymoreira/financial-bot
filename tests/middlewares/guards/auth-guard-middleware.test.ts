@@ -1,99 +1,78 @@
-import * as constants from '@/constants/index.js';
+import type { MiddlewareHandler } from 'hono';
 import { factory } from '@/factory.js';
-import { dependencyInjectionMiddleware } from '@/middlewares/dependency-injection/dependency-injection-middleware.js';
 import { authGuardMiddleware } from '@/middlewares/guards/index.js';
+import type { AppEnv } from '@/types/index.js';
 
-const app = factory.createApp();
+function createApp(secretsStoreService: {
+  getSecret: () => Promise<string | null>;
+}) {
+  const app = factory.createApp();
 
-app.use(dependencyInjectionMiddleware({ constants }));
-app.use(authGuardMiddleware);
+  const mockDependencyInjection: MiddlewareHandler<AppEnv> = async (
+    context,
+    next,
+  ) => {
+    context.set('services', {
+      secretsStoreService,
+    } as unknown as AppEnv['Variables']['services']);
+    return next();
+  };
 
-app.post('/webhook', async (context) => {
-  return context.text('Authorized', 200);
-});
+  app.use(mockDependencyInjection);
+  app.use(authGuardMiddleware);
+  app.post('/webhook', (context) => context.text('Authorized', 200));
+
+  return app;
+}
 
 describe('middleware guards: auth guard', () => {
   describe('when TELEGRAM_WEBHOOK_SECRET_TOKEN is not set', () => {
     test('returns 500', async () => {
-      const request = await app.request(
-        '/webhook',
-        {
-          method: 'POST',
-          headers: {
-            'X-Telegram-Bot-Api-Secret-Token': 'some-token',
-          },
-        },
-        {
-          TELEGRAM_WEBHOOK_SECRET_TOKEN: {
-            get: async () => {
-              throw new Error('Secret not found');
-            },
-          },
-        },
-      );
+      const app = createApp({ getSecret: async () => null });
 
-      expect(request.status).toBe(500);
+      const response = await app.request('/webhook', {
+        method: 'POST',
+        headers: { 'X-Telegram-Bot-Api-Secret-Token': 'some-token' },
+      });
+
+      expect(response.status).toBe(500);
     });
   });
 
   describe('when the secret token does not match', () => {
     test('returns 401', async () => {
-      const request = await app.request(
-        '/webhook',
-        {
-          method: 'POST',
-          headers: {
-            'X-Telegram-Bot-Api-Secret-Token': 'invalid-token',
-          },
-        },
-        {
-          TELEGRAM_WEBHOOK_SECRET_TOKEN: {
-            get: async () => 'valid-secret',
-          },
-        },
-      );
+      const app = createApp({ getSecret: async () => 'valid-secret' });
 
-      expect(request.status).toBe(401);
+      const response = await app.request('/webhook', {
+        method: 'POST',
+        headers: { 'X-Telegram-Bot-Api-Secret-Token': 'invalid-token' },
+      });
+
+      expect(response.status).toBe(401);
     });
   });
 
   describe('when the secret token header is missing', () => {
     test('returns 401', async () => {
-      const request = await app.request(
-        '/webhook',
-        {
-          method: 'POST',
-        },
-        {
-          TELEGRAM_WEBHOOK_SECRET_TOKEN: {
-            get: async () => 'valid-secret',
-          },
-        },
-      );
+      const app = createApp({ getSecret: async () => 'valid-secret' });
 
-      expect(request.status).toBe(401);
+      const response = await app.request('/webhook', { method: 'POST' });
+
+      expect(response.status).toBe(401);
     });
   });
 
   describe('when the secret token matches', () => {
-    test('bypass the request', async () => {
-      const request = await app.request(
-        '/webhook',
-        {
-          method: 'POST',
-          headers: {
-            'X-Telegram-Bot-Api-Secret-Token': 'valid-secret',
-          },
-        },
-        {
-          TELEGRAM_WEBHOOK_SECRET_TOKEN: {
-            get: async () => 'valid-secret',
-          },
-        },
-      );
+    test('allows the request through', async () => {
+      const app = createApp({ getSecret: async () => 'valid-secret' });
 
-      expect(request.status).toBe(200);
-      expect(await request.text()).toBe('Authorized');
+      const response = await app.request('/webhook', {
+        method: 'POST',
+        headers: { 'X-Telegram-Bot-Api-Secret-Token': 'valid-secret' },
+      });
+
+      expect(response.status).toBe(200);
+      expect(await response.text()).toBe('Authorized');
     });
   });
 });

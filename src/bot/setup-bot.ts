@@ -1,13 +1,8 @@
 import { Bot } from 'gramio';
-import type { DependencyInjection } from '@/types/dependency-injection.js';
+import type { DependencyInjection } from '@/types/index.js';
 
 export async function setupBot({ services }: DependencyInjection) {
-  const {
-    anthropicService,
-    botManagerService,
-    googleSheetsService,
-    secretsStoreService,
-  } = services;
+  const { botManagerService, expenseService, secretsStoreService } = services;
 
   const botToken = await secretsStoreService.getSecret('TELEGRAM_BOT_TOKEN');
   if (!botToken) {
@@ -45,18 +40,19 @@ export async function setupBot({ services }: DependencyInjection) {
       }
 
       await statusMessage.editText('Processando via Anthropic...');
-      const expense = await anthropicService.parseExpense({
+      const expense = await expenseService.parseExpense({
         expense: registeredExpense,
-        id,
-        registeredAt,
+        metadata: {
+          id,
+          registeredAt,
+        },
       });
 
       await statusMessage.editText('Salvando na planilha...');
-      const saved = await googleSheetsService.appendExpense(expense);
-
+      const saved = await expenseService.registerExpense(expense);
       if (!saved) {
         return await statusMessage.editText(
-          'Erro ao salvar na planilha. Por favor, tente novamente.',
+          '🔴 Erro ao salvar na planilha. Por favor, tente novamente.',
         );
       }
 
@@ -67,7 +63,7 @@ export async function setupBot({ services }: DependencyInjection) {
         `✅ Despesa registrada com sucesso em ${timeTotal}s`,
       );
     } catch (error) {
-      console.error('[MESSAGE PROCESSING ERROR] ', error);
+      console.error('[Message Processing Error] ', error);
       await statusMessage.editText(
         '🔴 Algo inesperado aconteceu. Verifique os logs e tente novamente mais tarde.',
       );

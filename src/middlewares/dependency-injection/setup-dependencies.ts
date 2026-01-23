@@ -1,30 +1,41 @@
-import type * as constants from '@/constants/index.js';
+import * as clients from '@/clients/index.js';
 import * as services from '@/services/index.js';
-import type { AppEnv } from '@/types/app-env.js';
-import type { DependencyInjection } from '@/types/dependency-injection.js';
-
-type Constants = typeof constants;
+import type { AppEnv, DependencyInjection } from '@/types/index.js';
+import { getEnvironmentVariables } from '@/utils/index.js';
 
 export function setupDependencies(
-  env: AppEnv['Bindings'],
-  { constants }: { constants: Constants },
+  bindings: AppEnv['Bindings'],
 ): DependencyInjection {
-  const secretsStoreService = new services.SecretsStoreService(env);
-  const anthropicService = new services.AnthropicService(secretsStoreService);
-  const googleSheetsService = new services.GoogleSheetsService({
-    spreadsheetId: '1I957S-QuQwPCfejKT-_utbThES5MwXrE3GJNV4cD2Qo',
-    sheetName: 'Backlog',
-    serviceAccountCredentials: env.GOOGLE_SERVICE_ACCOUNT,
+  const env = getEnvironmentVariables();
+
+  const secretsStoreService = new services.SecretsStoreService(bindings);
+
+  const anthropicClient = new clients.AnthropicClient({
+    services: {
+      secretsStoreService,
+    },
+    config: {
+      model: 'claude-haiku-4-5-20251001',
+    },
+  });
+  const googleSheetsClient = new clients.GoogleSheetsClient({
+    serviceAccountCredentials: env.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS,
   });
 
   return {
     services: {
-      anthropicService,
       botManagerService: new services.BotManagerService({
-        chatsIds: constants.ALLOWED_CHATS_IDS,
-        usersIds: constants.ALLOWED_USERS_IDS,
+        allowList: {
+          chats: env.ALLOWED_CHAT_IDS,
+          users: env.ALLOWED_USER_IDS,
+        },
       }),
-      googleSheetsService,
+      expenseService: new services.ExpenseService({
+        clients: {
+          anthropicClient: anthropicClient,
+          googleSheetsClient: googleSheetsClient,
+        },
+      }),
       secretsStoreService,
     },
   };

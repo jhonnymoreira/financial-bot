@@ -1,0 +1,68 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`utils: getEnvironmentVariables > validations > ALLOWED_CHAT_IDS > must be valid JSON array of numbers 1`] = `
+[ZodError: [
+  {
+    "code": "invalid_format",
+    "format": "json",
+    "message": "Unexpected token 'i', \\"invalid\\" is not valid JSON",
+    "path": []
+  }
+]]
+`;
+
+exports[`utils: getEnvironmentVariables > validations > ALLOWED_USER_IDS > must be valid JSON array of numbers 1`] = `
+[ZodError: [
+  {
+    "code": "invalid_format",
+    "format": "json",
+    "message": "Unexpected token 'i', \\"invalid\\" is not valid JSON",
+    "path": []
+  }
+]]
+`;
+
+exports[`utils: getEnvironmentVariables > validations > GOOGLE_SERVICE_ACCOUNT_CREDENTIALS > must be a non-empty string 1`] = `
+[ZodError: [
+  {
+    "origin": "string",
+    "code": "too_small",
+    "minimum": 1,
+    "inclusive": true,
+    "path": [
+      "GOOGLE_SERVICE_ACCOUNT_CREDENTIALS"
+    ],
+    "message": "Too small: expected string to have >=1 characters"
+  }
+]]
+`;
+
+exports[`utils: getEnvironmentVariables > validations > SPREADSHEET_BACKLOG_SHEET_NAME > must be a non-empty string 1`] = `
+[ZodError: [
+  {
+    "origin": "string",
+    "code": "too_small",
+    "minimum": 1,
+    "inclusive": true,
+    "path": [
+      "SPREADSHEET_BACKLOG_SHEET_NAME"
+    ],
+    "message": "Too small: expected string to have >=1 characters"
+  }
+]]
+`;
+
+exports[`utils: getEnvironmentVariables > validations > SPREADSHEET_ID > must be a non-empty string 1`] = `
+[ZodError: [
+  {
+    "origin": "string",
+    "code": "too_small",
+    "minimum": 1,
+    "inclusive": true,
+    "path": [
+      "SPREADSHEET_ID"
+    ],
+    "message": "Too small: expected string to have >=1 characters"
+  }
+]]
+`;

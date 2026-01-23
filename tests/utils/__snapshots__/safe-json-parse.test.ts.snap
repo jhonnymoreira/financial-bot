@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`utils: safeJSONParse > when JSON does not match schema > throws an error 1`] = `
+[ZodError: [
+  {
+    "expected": "number",
+    "code": "invalid_type",
+    "path": [
+      "age"
+    ],
+    "message": "Invalid input: expected number, received string"
+  }
+]]
+`;
+
+exports[`utils: safeJSONParse > when JSON is invalid > throws an error 1`] = `
+[ZodError: [
+  {
+    "code": "invalid_format",
+    "format": "json",
+    "message": "Expected property name or '}' in JSON at position 1 (line 1 column 2)",
+    "path": []
+  }
+]]
+`;

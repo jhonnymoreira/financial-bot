@@ -4,13 +4,14 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 export default defineWorkersConfig({
   plugins: [tsconfigPaths()],
   test: {
-    reporters: ['verbose'],
-    globals: true,
+    clearMocks: true,
     coverage: {
       provider: 'istanbul',
       reporter: ['text'],
       reportOnFailure: true,
     },
+    globals: true,
+    mockReset: true,
     poolOptions: {
       workers: {
         wrangler: { configPath: './wrangler.jsonc' },
@@ -24,6 +25,8 @@ export default defineWorkersConfig({
         },
       },
     },
+    reporters: ['verbose'],
+    restoreMocks: true,
     watch: false,
   },
 });

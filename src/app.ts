@@ -12,10 +12,10 @@ app.use(middlewares.guards.authGuardMiddleware);
 
 app.post('/webhook', ...webhookHandler);
 
-app.onError((err, c) => {
-  console.error(`[${c.req.method}] ${c.req.path} Error:`, err.message);
-  console.error('Stack:', err.stack);
-  return c.json({ error: 'Internal Server Error' }, 500);
+app.onError((error, context) => {
+  console.error(`[${context.req.method}] ${context.req.path} `, error.message);
+  console.error(error.stack);
+  return context.json({ error: 'Internal Server Error' }, 500);
 });
 
 export { app };

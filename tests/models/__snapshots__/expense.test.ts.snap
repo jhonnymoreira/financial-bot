@@ -1,0 +1,160 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`models: Expense > methods > toSpreadsheetRow() > transforms the data to be saved as a spreadsheet row 1`] = `
+[
+  "2026-01-23",
+  777,
+  "Aluguel",
+  "monthly-expenses",
+  "pix",
+  "Random bank",
+  "BRL",
+  7,
+  "2026-01-23T04:10:13.140Z",
+]
+`;
+
+exports[`models: Expense > validations > amount > must be positive 1`] = `
+[ZodError: [
+  {
+    "origin": "number",
+    "code": "too_small",
+    "minimum": 0,
+    "inclusive": false,
+    "path": [
+      "amount"
+    ],
+    "message": "Too small: expected number to be >0"
+  }
+]]
+`;
+
+exports[`models: Expense > validations > categories > must be at least one of the supported categories 1`] = `
+[ZodError: [
+  {
+    "code": "invalid_value",
+    "values": [
+      "appliances",
+      "candomble",
+      "car",
+      "credit-allowance",
+      "education",
+      "entertainment",
+      "food",
+      "gifts",
+      "health",
+      "market",
+      "monthly-expenses",
+      "pets",
+      "self-care",
+      "subscriptions",
+      "subscriptions-1-month",
+      "subscriptions-3-months",
+      "subscriptions-6-months",
+      "subscriptions-1-year",
+      "taxes",
+      "transport",
+      "work",
+      "unrecognized"
+    ],
+    "path": [
+      "categories",
+      0
+    ],
+    "message": "Invalid option: expected one of \\"appliances\\"|\\"candomble\\"|\\"car\\"|\\"credit-allowance\\"|\\"education\\"|\\"entertainment\\"|\\"food\\"|\\"gifts\\"|\\"health\\"|\\"market\\"|\\"monthly-expenses\\"|\\"pets\\"|\\"self-care\\"|\\"subscriptions\\"|\\"subscriptions-1-month\\"|\\"subscriptions-3-months\\"|\\"subscriptions-6-months\\"|\\"subscriptions-1-year\\"|\\"taxes\\"|\\"transport\\"|\\"work\\"|\\"unrecognized\\""
+  }
+]]
+`;
+
+exports[`models: Expense > validations > description > must be a string with at least 1 non-space character 1`] = `
+[ZodError: [
+  {
+    "origin": "string",
+    "code": "too_small",
+    "minimum": 1,
+    "inclusive": true,
+    "path": [
+      "description"
+    ],
+    "message": "Too small: expected string to have >=1 characters"
+  }
+]]
+`;
+
+exports[`models: Expense > validations > messageId > must be a positive number 1`] = `
+[ZodError: [
+  {
+    "origin": "number",
+    "code": "too_small",
+    "minimum": 0,
+    "inclusive": false,
+    "path": [
+      "messageId"
+    ],
+    "message": "Too small: expected number to be >0"
+  }
+]]
+`;
+
+exports[`models: Expense > validations > occurredAt > must be a valid ISO date 1`] = `
+[ZodError: [
+  {
+    "origin": "string",
+    "code": "invalid_format",
+    "format": "date",
+    "pattern": "/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))$/",
+    "path": [
+      "occurredAt"
+    ],
+    "message": "Invalid ISO date"
+  }
+]]
+`;
+
+exports[`models: Expense > validations > paymentIdentifier > must be a string with at least 1 non-space character 1`] = `
+[ZodError: [
+  {
+    "origin": "string",
+    "code": "too_small",
+    "minimum": 1,
+    "inclusive": true,
+    "path": [
+      "paymentIdentifier"
+    ],
+    "message": "Too small: expected string to have >=1 characters"
+  }
+]]
+`;
+
+exports[`models: Expense > validations > paymentMethod > must be one of the supported payment methods 1`] = `
+[ZodError: [
+  {
+    "code": "invalid_value",
+    "values": [
+      "pix",
+      "debit",
+      "credit",
+      "boleto"
+    ],
+    "path": [
+      "paymentMethod"
+    ],
+    "message": "Invalid option: expected one of \\"pix\\"|\\"debit\\"|\\"credit\\"|\\"boleto\\""
+  }
+]]
+`;
+
+exports[`models: Expense > validations > registeredAt > must be a valid ISO date time 1`] = `
+[ZodError: [
+  {
+    "origin": "string",
+    "code": "invalid_format",
+    "format": "datetime",
+    "pattern": "/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d(?::[0-5]\\\\d(?:\\\\.\\\\d+)?)?(?:Z))$/",
+    "path": [
+      "registeredAt"
+    ],
+    "message": "Invalid ISO datetime"
+  }
+]]
+`;

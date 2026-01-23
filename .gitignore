@@ -24,5 +24,4 @@ logs/
 coverage/
 
 # misc
-constants/
 .DS_Store

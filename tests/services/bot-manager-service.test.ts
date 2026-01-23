@@ -1,5 +1,5 @@
 import type { Bot, Context } from 'gramio';
-import { BotManagerService } from '@/services/bot-manager-service.js';
+import { BotManagerService } from '@/services/index.js';
 
 const allowList = {
   chats: [123, 456],

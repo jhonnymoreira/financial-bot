@@ -1,5 +1,4 @@
 import { logger } from 'hono/logger';
-import * as constants from '@/constants/index.js';
 import { webhookHandler } from '@/handlers/index.js';
 import * as middlewares from '@/middlewares/index.js';
 import { factory } from './factory.js';
@@ -7,7 +6,7 @@ import { factory } from './factory.js';
 const app = factory.createApp();
 
 app.use(logger());
-app.use(middlewares.dependencyInjectionMiddleware({ constants }));
+app.use(middlewares.dependencyInjectionMiddleware);
 app.use(middlewares.guards.routerGuardMiddleware);
 app.use(middlewares.guards.authGuardMiddleware);
 

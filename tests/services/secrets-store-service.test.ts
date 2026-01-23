@@ -1,4 +1,5 @@
-import { SecretsStoreService } from '@/services/secrets-store-service.js';
+import { SecretsStoreService } from '@/services/index.js';
+import type { AppEnv } from '@/types/index.js';
 
 const service = new SecretsStoreService({
   TELEGRAM_BOT_TOKEN: {
@@ -9,7 +10,7 @@ const service = new SecretsStoreService({
       throw new Error();
     },
   },
-});
+} as unknown as AppEnv['Bindings']);
 
 describe('SecretsStoreService', () => {
   describe('async getSecret(secretName)', () => {

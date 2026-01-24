@@ -21,6 +21,11 @@ Parses natural language expense messages using Claude AI and automatically regis
     - [Creating the Bot](#creating-the-bot)
     - [Registering the Webhook](#registering-the-webhook)
     - [Getting User and Chat IDs](#getting-user-and-chat-ids)
+- [Usage](#usage)
+  - [Examples](#examples)
+  - [Payment Methods](#payment-methods)
+  - [Temporal References](#temporal-references)
+  - [Categories](#categories)
 - [Monitoring](#monitoring)
 - [Local Development](#local-development)
   - [Setup](#setup)
@@ -208,6 +213,42 @@ curl -X POST "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook" \
 Send `/start` to your bot — it will respond with your user ID and chat ID.
 
 For group chats, add the bot to the group and send `/start` there to get the group's chat ID (groups have negative IDs).
+
+## Usage
+
+Add the bot to a group or send a direct message, then send expense messages following this format:
+
+**Note**: The bot currently supports single messages only. Multi-message support is planned for the future.
+
+```
+{amount} {description} {temporal_ref} {payment_method} {payment_identifier} [categories]
+```
+
+### Examples
+
+```
+99 Pizzaria maneira hoje débito identificador-do-banco
+32.50 Besteirinhas no mercado 21/12/2025 pix identificador-do-banco
+150 Cinema com a família ontem crédito identificador-do-banco entertainment,food
+```
+
+### Payment Methods
+
+`débito` (debit), `crédito` (credit), `pix`, `boleto`
+
+### Temporal References
+
+The bot understands temporal references in pt-BR and calculates the `occurredAt` date accordingly. These references are stripped from the final description:
+
+`hoje`, `ontem`, `anteontem`, `[N] dia(s) atrás`, `semana passada`, `mês passado`, `ano passado`, `segunda`, `terça`, `quarta`, `quinta`, `sexta`, `sábado`, `domingo`
+
+You can also use explicit dates like `21/12/2025`.
+
+### Categories
+
+You can pass one or more categories as the last argument, separated by comma. If not provided, the bot infers from the description.
+
+`appliances`, `candomble`, `car`, `credit-allowance`, `education`, `entertainment`, `food`, `gifts`, `health`, `market`, `monthly-expenses`, `pets`, `self-care`, `subscriptions`, `subscriptions-1-month`, `subscriptions-3-months`, `subscriptions-6-months`, `subscriptions-1-year`, `taxes`, `transport`, `work`
 
 ## Monitoring
 

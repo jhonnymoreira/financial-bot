@@ -3,9 +3,16 @@ import type { DependencyInjection } from '@/types/index.js';
 
 type MessageHandler = (context: unknown) => Promise<void>;
 
-const { mockBot, getHandler } = vi.hoisted(() => {
+type CommandHandler = (context: unknown) => unknown;
+
+const { mockBot, getHandler, getCommandHandler } = vi.hoisted(() => {
   let handler: MessageHandler | null = null;
+  const commandHandlers: Record<string, CommandHandler> = {};
   const mockBot = {
+    command: vi.fn((command: string, h: CommandHandler) => {
+      commandHandlers[command] = h;
+      return mockBot;
+    }),
     on: vi.fn((event: string, h: MessageHandler) => {
       if (event === 'message') handler = h;
       return mockBot;
@@ -16,6 +23,11 @@ const { mockBot, getHandler } = vi.hoisted(() => {
     getHandler: () => {
       if (!handler) throw new Error('Handler not registered');
       return handler;
+    },
+    getCommandHandler: (command: string) => {
+      const h = commandHandlers[command];
+      if (!h) throw new Error(`Command handler not registered: ${command}`);
+      return h;
     },
   };
 });
@@ -96,6 +108,20 @@ describe('setupBot', () => {
       const result = await setupBot({ services });
 
       expect(result).toBe(mockBot);
+    });
+  });
+
+  describe('/start command', () => {
+    test('responds with user ID and chat ID', async () => {
+      const { services } = createServices({});
+      await setupBot({ services });
+      const handler = getCommandHandler('start');
+      const send = vi.fn();
+      const context = { from: { id: 123 }, chatId: 456, send };
+
+      handler(context);
+
+      expect(send).toHaveBeenCalledWith('User ID: 123\nChat ID: 456');
     });
   });
 

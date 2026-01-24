@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "aa2djxzx4t",
+  "name": "financial-bot",
   "main": "src/index.ts",
   "compatibility_flags": ["nodejs_compat"],
   "compatibility_date": "2025-12-17",
@@ -26,17 +26,17 @@
     {
       "binding": "ANTHROPIC_API_KEY",
       "store_id": "d65937ab096048d08ff5a7b343b753ba",
-      "secret_name": "aa2djxzx4t_anthropic_api_key"
+      "secret_name": "financial-bot_anthropic_api_key"
     },
     {
       "binding": "TELEGRAM_BOT_TOKEN",
       "store_id": "d65937ab096048d08ff5a7b343b753ba",
-      "secret_name": "aa2djxzx4t_telegram_bot_token"
+      "secret_name": "financial-bot_telegram_bot_token"
     },
     {
       "binding": "TELEGRAM_WEBHOOK_SECRET_TOKEN",
       "store_id": "d65937ab096048d08ff5a7b343b753ba",
-      "secret_name": "aa2djxzx4t_secret_token"
+      "secret_name": "financial-bot_secret_token"
     }
   ]
 }

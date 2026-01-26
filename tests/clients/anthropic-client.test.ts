@@ -42,7 +42,7 @@ describe('AnthropicClient', () => {
 
       expect(mockParse).toHaveBeenCalledWith({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 100,
+        max_tokens: 150,
         temperature: 0,
         betas: ['structured-outputs-2025-11-13'],
         messages: [{ role: 'user', content: 'test prompt' }],

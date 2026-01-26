@@ -28,7 +28,7 @@ export class AnthropicClient {
 
     const response = await client.beta.messages.parse({
       model: this.#model,
-      max_tokens: 100,
+      max_tokens: 150,
       temperature: 0,
       betas: ['structured-outputs-2025-11-13'],
       messages: [

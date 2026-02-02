@@ -124,6 +124,15 @@ describe('models: Expense', () => {
           new Expense({ ...expenseProps, registeredAt: '2026/12/12' });
         }).toThrowErrorMatchingSnapshot();
       });
+
+      test('must have millisecond precision', () => {
+        expect(() => {
+          new Expense({
+            ...expenseProps,
+            registeredAt: '2026-01-23T04:10:13Z',
+          });
+        }).toThrowErrorMatchingSnapshot();
+      });
     });
   });
 

@@ -52,12 +52,13 @@ const schema = z.object({
     .enum(['pix', 'debit', 'credit', 'boleto'])
     .describe('the payment method used in the expense transction'),
   registeredAt: z.iso
-    .datetime()
+    .datetime({ precision: 3 })
     .describe('the ISO datetime of when Telegram processed the expense'),
 });
 
 export type ExpenseProps = z.infer<typeof schema>;
 
+// biome-ignore lint/suspicious/noEmptyInterface: The interface defines the model properties and it helps reducing the class verbosity.
 export interface Expense extends Readonly<ExpenseProps> {}
 export class Expense implements Model {
   static schema = schema;

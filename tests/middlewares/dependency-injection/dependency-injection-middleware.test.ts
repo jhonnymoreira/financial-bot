@@ -1,5 +1,4 @@
 import { factory } from '@/factory.js';
-import type { AppEnv } from '@/types/index.js';
 
 const mockServices = {
   botManagerService: {},

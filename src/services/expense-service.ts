@@ -37,39 +37,29 @@ export class ExpenseService {
       registeredAt: string;
     };
   }) {
-    const context = this.#generateExpenseRegistrationContext({
-      expense,
-      metadata,
-    });
+    const context = this.#generateExpenseRegistrationContext(expense);
     const parsedExpenseResponse = await this.#clients.anthropicClient.parse(
       context,
-      Expense.schema,
+      Expense.parsingSchema,
     );
 
-    return new Expense(parsedExpenseResponse);
+    return new Expense({
+      ...parsedExpenseResponse,
+      messageId: metadata.id,
+      registeredAt: metadata.registeredAt,
+    });
   }
 
-  #generateExpenseRegistrationContext({
-    expense,
-    metadata,
-  }: {
-    expense: string;
-    metadata: {
-      id: number;
-      registeredAt: string;
-    };
-  }) {
+  #generateExpenseRegistrationContext(expense: string) {
     const currentDate = getISODate(new Date());
 
-    return `Parse: "${metadata.id} ${metadata.registeredAt} ${currentDate} ${expense}"
+    return `Parse: "${currentDate} ${expense}"
 
-FORMAT: {id} {registeredAt} {currentDate} {amount} {description} {temporal_ref} {payment_type} {provider} [category]
+FORMAT: {currentDate} {amount} {description} {temporal_ref} {payment_type} {provider} [category]
 
 OUTPUT FIELDS:
-- messageId: id (number)
 - amount: numeric value
 - currency: "BRL"
-- registeredAt: as-is
 - occurredAt: YYYY-MM-DD from currentDate + temporal_ref
 - paymentType: débito→debit, crédito→credit, pix→pix, boleto→boleto
 - paymentIdentifier: provider (capitalized)

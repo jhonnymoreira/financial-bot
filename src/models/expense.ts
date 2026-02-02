@@ -62,6 +62,7 @@ export type ExpenseProps = z.infer<typeof schema>;
 export interface Expense extends Readonly<ExpenseProps> {}
 export class Expense implements Model {
   static schema = schema;
+  static parsingSchema = schema.omit({ messageId: true, registeredAt: true });
 
   constructor(props: ExpenseProps) {
     const expense = Expense.schema.parse(props);

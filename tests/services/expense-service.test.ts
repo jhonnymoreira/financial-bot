@@ -64,8 +64,10 @@ describe('ExpenseService', () => {
   });
 
   describe('parseExpense({ expense, metadata })', () => {
-    test('calls anthropicClient.parse with generated context', async () => {
-      const parse = vi.fn().mockResolvedValue(expenseProps);
+    const { messageId, registeredAt, ...parsedProps } = expenseProps;
+
+    test('calls anthropicClient.parse with generated context and parsing schema', async () => {
+      const parse = vi.fn().mockResolvedValue(parsedProps);
       const anthropicClient = { parse } as unknown as AnthropicClient;
       const googleSheetsClient = {} as unknown as GoogleSheetsClient;
 
@@ -80,14 +82,14 @@ describe('ExpenseService', () => {
 
       expect(parse).toHaveBeenCalledWith(
         expect.stringContaining(
-          'Parse: "1 2026-01-23T10:00:00.000Z 2026-01-23',
+          'Parse: "2026-01-23 100 mercado hoje débito nubank"',
         ),
-        Expense.schema,
+        Expense.parsingSchema,
       );
     });
 
-    test('returns an Expense instance', async () => {
-      const parse = vi.fn().mockResolvedValue(expenseProps);
+    test('returns an Expense instance with metadata merged', async () => {
+      const parse = vi.fn().mockResolvedValue(parsedProps);
       const anthropicClient = { parse } as unknown as AnthropicClient;
       const googleSheetsClient = {} as unknown as GoogleSheetsClient;
 
@@ -101,6 +103,8 @@ describe('ExpenseService', () => {
       });
 
       expect(result).toBeInstanceOf(Expense);
+      expect(result.messageId).toBe(1);
+      expect(result.registeredAt).toBe('2026-01-23T10:00:00.000Z');
     });
   });
 });
